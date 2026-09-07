@@ -150,3 +150,32 @@ fn live_neighbors(grid : Grid, x : Int, y : Int, toroidal : Bool) -> Int {
   }
   count
 }
+
+/// The result of `find_period`: `period` is the length of the repeating cycle
+/// and `steps` is the number of transient generations before the cycle begins.
+pub struct PeriodResult {
+  period : Int
+  steps : Int
+}
+
+/// Step the automaton until a previous grid state repeats. Returns the detected
+/// period, or None if no repeat is found within `max_steps`.
+pub fn find_period(
+  rule : LifeRule,
+  grid : Grid,
+  max_steps : Int,
+  toroidal : Bool
+) -> PeriodResult? {
+  let seen : @hashmap.HashMap[String, Int] = @hashmap.HashMap([])
+  let mut cur = grid
+  seen.set(render_grid(cur), 0)
+  for step = 1; step <= max_steps; step = step + 1 {
+    cur = life_step(rule, cur, toroidal)
+    let key = render_grid(cur)
+    match seen.get(key) {
+      Some(prev) => return Some({ period: step - prev, steps: prev })
+      None => seen.set(key, step)
+    }
+  }
+  None
+}
