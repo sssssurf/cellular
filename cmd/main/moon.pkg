@@ -1,0 +1,8 @@
+import {
+  "cellular/cellular",
+  "moonbitlang/core/env",
+}
+
+options(
+  "is-main": true,
+)
