@@ -9,7 +9,23 @@ fn main {
     "eca" => run_eca(args)
     "random" => run_random(args)
     "patterns" => list_patterns()
+    "info" => print_info()
     _ => print_usage()
+  }
+}
+
+fn print_info() -> Unit {
+  println("life-like rules:")
+  for t in @cellular.rule_descriptions() {
+    let (name, notation) = t
+    println("  \{name}\t\{notation}")
+  }
+  println("")
+  println("elementary CA: any rule 0-255 (e.g. 30, 90, 110)")
+  println("")
+  println("patterns:")
+  for name in @cellular.pattern_names() {
+    println("  \{name}")
   }
 }
 
@@ -21,6 +37,7 @@ fn print_usage() -> Unit {
   println("  cellular eca <rule 0-255> <width> <generations>")
   println("  cellular random <rule> <width> <height> <generations>")
   println("  cellular patterns")
+  println("  cellular info")
   println("")
   println("examples:")
   println("  cellular life B3/S23 10 glider")

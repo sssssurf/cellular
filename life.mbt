@@ -179,3 +179,19 @@ pub fn find_period(
   }
   None
 }
+
+/// All built-in life-like rules as `(name, B/S notation)` pairs.
+pub fn rule_descriptions() -> Array[(String, String)] {
+  [
+    ("conway", "B3/S23"),
+    ("highlife", "B36/S23"),
+    ("seeds", "B2/S"),
+    ("day_night", "B3678/S34678"),
+    ("replicator", "B1357/S1357"),
+    ("life_without_death", "B3/S012345678"),
+    ("maze", "B3/S12345"),
+    ("anneal", "B4678/S35678"),
+    ("diamoeba", "B35678/S5678"),
+    ("coral", "B3/S45678"),
+  ]
+}
