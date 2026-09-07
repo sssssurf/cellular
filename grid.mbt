@@ -45,3 +45,63 @@ pub fn Grid::random(width : Int, height : Int, density : Double) -> Grid {
   }
   g
 }
+
+/// Parse a grid from ASCII art. `#`, `O`, `1`, or `X` marks a live cell; any
+/// other character marks a dead cell. Rows are separated by newlines and must
+/// all have the same length. Returns None for empty or ragged input.
+pub fn Grid::from_string(s : String) -> Grid? {
+  let lines : Array[String] = []
+  let mut cur = StringBuilder()
+  for ch in s {
+    if ch == '\n' {
+      lines.push(cur.to_string())
+      cur = StringBuilder()
+    } else {
+      cur.write_char(ch)
+    }
+  }
+  let last = cur.to_string()
+  if last.length() > 0 {
+    lines.push(last)
+  }
+  if lines.length() == 0 {
+    return None
+  }
+  let height = lines.length()
+  let width = lines[0].length()
+  for line in lines {
+    if line.length() != width {
+      return None
+    }
+  }
+  let g = Grid::new(width, height)
+  for y = 0; y < height; y = y + 1 {
+    let line = lines[y]
+    for x = 0; x < width; x = x + 1 {
+      let c = line[x]
+      if c == '#' || c == 'O' || c == '1' || c == 'X' {
+        g.set(x, y, true)
+      }
+    }
+  }
+  Some(g)
+}
+
+/// Return an independent copy of the grid.
+pub fn Grid::copy(self : Grid) -> Grid {
+  let g = Grid::new(self.width, self.height)
+  for i = 0; i < self.cells.length(); i = i + 1 {
+    g.cells[i] = self.cells[i]
+  }
+  g
+}
+
+/// Fraction of cells that are alive (0.0 to 1.0). Returns 0.0 for an empty grid.
+pub fn Grid::density(self : Grid) -> Double {
+  let total = self.width * self.height
+  if total == 0 {
+    0.0
+  } else {
+    self.live_count().to_double() / total.to_double()
+  }
+}
