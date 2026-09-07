@@ -53,6 +53,36 @@ pub fn day_night() -> LifeRule {
   rule_from([3, 6, 7, 8], [3, 4, 6, 7, 8])
 }
 
+/// Replicator (B1357/S1357): patterns eventually replicate themselves.
+pub fn replicator() -> LifeRule {
+  rule_from([1, 3, 5, 7], [1, 3, 5, 7])
+}
+
+/// Life without Death (B3/S012345678): live cells never die.
+pub fn life_without_death() -> LifeRule {
+  rule_from([3], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+}
+
+/// Maze (B3/S12345): grows maze-like structures.
+pub fn maze() -> LifeRule {
+  rule_from([3], [1, 2, 3, 4, 5])
+}
+
+/// Anneal (B4678/S35678): rich in still lifes.
+pub fn anneal() -> LifeRule {
+  rule_from([4, 6, 7, 8], [3, 5, 6, 7, 8])
+}
+
+/// Diamoeba (B35678/S5678): produces large diamond shapes.
+pub fn diamoeba() -> LifeRule {
+  rule_from([3, 5, 6, 7, 8], [5, 6, 7, 8])
+}
+
+/// Coral (B3/S45678): grows coral-like structures.
+pub fn coral() -> LifeRule {
+  rule_from([3], [4, 5, 6, 7, 8])
+}
+
 fn rule_from(birth_digits : Array[Int], survival_digits : Array[Int]) -> LifeRule {
   let birth = Array::make(9, false)
   for d in birth_digits {
