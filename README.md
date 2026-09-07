@@ -43,13 +43,34 @@ let grid = @cellular.life_step(highlife, @cellular.r_pentomino(), false)
 1D elementary cellular automata:
 
 ```moonbit
-let state : Array[Bool] = @array.replicate(41, false)
+let state : Array[Bool] = Array::make(41, false)
 state[20] = true
 
 for row in @cellular.eca_run(30, state, 16, false) {
   println(@cellular.render_eca(row)) // Rule 30 -> Sierpinski-like triangle
 }
 ```
+
+### API overview
+
+```moonbit
+// Grid helpers
+let g = @cellular.Grid::new(20, 20)
+let g = @cellular.Grid::from_string(".#.\n###\n.#.").unwrap()
+let g = @cellular.Grid::random(20, 20, 0.3)
+let copy = g.copy()
+let d : Double = g.density()          // fraction of live cells
+
+// Stepping and analysis
+let next = @cellular.life_step(rule, g, true)
+let history : Array[Grid] = @cellular.life_run(rule, g, 10, true)
+let pop : Array[Int] = @cellular.population_curve(rule, g, 10, true)
+
+// Period detection (None if no repeat within the limit)
+let period = @cellular.find_period(rule, g, 100, true)
+```
+
+`@cellular.rule_descriptions()` lists every built-in rule with its `B/S` notation.
 
 ## Command line
 
@@ -64,6 +85,12 @@ moon run cmd/main -- eca 30 41 16
 
 # List available patterns
 moon run cmd/main -- patterns
+
+# Random initial state, Conway's rule, 20x10 grid, 5 generations
+moon run cmd/main -- random B3/S23 20 10 5
+
+# Show every built-in rule and pattern
+moon run cmd/main -- info
 ```
 
 ## Rules and patterns
