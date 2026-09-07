@@ -107,6 +107,55 @@ test "render_grid uses # and . with one row per line" {
   assert_eq!(s, "##..\n##..\n....\n....\n")
 }
 
+test "conway: beehive and tub are still lifes" {
+  let rule = conway()
+  let b0 = beehive()
+  let t0 = tub()
+  assert_eq!(render_grid(life_step(rule, b0, false)), render_grid(b0))
+  assert_eq!(render_grid(life_step(rule, t0, false)), render_grid(t0))
+  assert_eq!(b0.live_count(), 6)
+  assert_eq!(t0.live_count(), 4)
+}
+
+test "life_without_death: a single cell never dies" {
+  let rule = life_without_death()
+  let g = make_single_cell()
+  let g1 = life_step(rule, g, false)
+  assert_eq!(g1.live_count(), 1)
+}
+
+test "life_run returns generations + 1 grids" {
+  let grids = life_run(conway(), glider(), 5, true)
+  assert_eq!(grids.length(), 6)
+  assert_eq!(grids[0].live_count(), 5)
+}
+
+test "toroidal wrap counts wrapped neighbours" {
+  let g = Grid::new(3, 3)
+  g.set(2, 0, true)
+  g.set(0, 2, true)
+  g.set(2, 2, true)
+  assert_eq!(live_neighbors(g, 0, 0, true), 3)
+  assert_eq!(live_neighbors(g, 0, 0, false), 0)
+}
+
+test "parse_life_rule: empty string is a valid empty rule" {
+  match parse_life_rule("") {
+    Some(r) => {
+      assert_eq!(r.birth[3], false)
+      assert_eq!(r.survival[2], false)
+    }
+    None => assert_eq!(true, false)
+  }
+}
+
+test "random grid respects density bounds" {
+  let all_dead = Grid::random(20, 20, 0.0)
+  let all_alive = Grid::random(20, 20, 1.0)
+  assert_eq!(all_dead.live_count(), 0)
+  assert_eq!(all_alive.live_count(), 400)
+}
+
 fn rule_parses(s : String) -> Bool {
   match parse_life_rule(s) {
     Some(_) => true
