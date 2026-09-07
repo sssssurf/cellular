@@ -79,7 +79,10 @@ moon run cmd/main -- patterns
 | `eca 110` | Rule 110 | Turing-complete |
 
 Built-in patterns: `block`, `blinker`, `toad`, `beacon`, `glider`,
-`r-pentomino`.
+`r-pentomino`, `beehive`, `tub`.
+
+Additional life-like rules are also available as functions: `replicator`,
+`life_without_death`, `maze`, `anneal`, `diamoeba`, and `coral`.
 
 ## Development
 
