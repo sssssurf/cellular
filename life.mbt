@@ -195,3 +195,21 @@ pub fn rule_descriptions() -> Array[(String, String)] {
     ("coral", "B3/S45678"),
   ]
 }
+
+/// Live-cell count at each generation, starting from the initial grid.
+/// Useful for studying how a configuration grows or stabilises over time.
+pub fn population_curve(
+  rule : LifeRule,
+  grid : Grid,
+  generations : Int,
+  toroidal : Bool
+) -> Array[Int] {
+  let counts : Array[Int] = []
+  counts.push(grid.live_count())
+  let mut cur = grid
+  for _ in 0..<generations {
+    cur = life_step(rule, cur, toroidal)
+    counts.push(cur.live_count())
+  }
+  counts
+}

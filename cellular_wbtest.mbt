@@ -225,6 +225,14 @@ test "rule_descriptions lists all 10 rules" {
   assert_eq!(rule_descriptions().length(), 10)
 }
 
+test "population_curve tracks glider population" {
+  let counts = population_curve(conway(), glider(), 4, true)
+  assert_eq!(counts.length(), 5)
+  for i = 0; i < counts.length(); i = i + 1 {
+    assert_eq!(counts[i], 5)
+  }
+}
+
 fn rule_parses(s : String) -> Bool {
   match parse_life_rule(s) {
     Some(_) => true
