@@ -109,6 +109,23 @@ pub fn life_step(rule : LifeRule, grid : Grid, toroidal : Bool) -> Grid {
   next
 }
 
+/// Run `generations` steps and return all grids, including the initial one.
+pub fn life_run(
+  rule : LifeRule,
+  grid : Grid,
+  generations : Int,
+  toroidal : Bool
+) -> Array[Grid] {
+  let grids : Array[Grid] = []
+  grids.push(grid)
+  let mut cur = grid
+  for _ in 0..<generations {
+    cur = life_step(rule, cur, toroidal)
+    grids.push(cur)
+  }
+  grids
+}
+
 fn live_neighbors(grid : Grid, x : Int, y : Int, toroidal : Bool) -> Int {
   let mut count = 0
   for dy = -1; dy <= 1; dy = dy + 1 {

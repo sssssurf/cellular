@@ -39,6 +39,16 @@ pub fn r_pentomino() -> Grid {
   make_pattern(5, 5, [(1, 0), (2, 0), (0, 1), (1, 1), (1, 2)])
 }
 
+/// A still life shaped like a beehive.
+pub fn beehive() -> Grid {
+  make_pattern(4, 4, [(1, 0), (2, 0), (0, 1), (3, 1), (1, 2), (2, 2)])
+}
+
+/// A still life shaped like a tub.
+pub fn tub() -> Grid {
+  make_pattern(4, 4, [(1, 0), (0, 1), (2, 1), (1, 2)])
+}
+
 /// Look up a pattern by name (used by the CLI).
 pub fn pattern_by_name(name : String) -> Grid? {
   match name {
@@ -48,11 +58,13 @@ pub fn pattern_by_name(name : String) -> Grid? {
     "beacon" => Some(beacon())
     "glider" => Some(glider())
     "r-pentomino" => Some(r_pentomino())
+    "beehive" => Some(beehive())
+    "tub" => Some(tub())
     _ => None
   }
 }
 
 /// All supported pattern names.
 pub fn pattern_names() -> Array[String] {
-  ["block", "blinker", "toad", "beacon", "glider", "r-pentomino"]
+  ["block", "blinker", "toad", "beacon", "glider", "r-pentomino", "beehive", "tub"]
 }
