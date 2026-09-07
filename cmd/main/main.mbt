@@ -7,6 +7,7 @@ fn main {
   match args[1] {
     "life" => run_life(args)
     "eca" => run_eca(args)
+    "random" => run_random(args)
     "patterns" => list_patterns()
     _ => print_usage()
   }
@@ -18,11 +19,13 @@ fn print_usage() -> Unit {
   println("usage:")
   println("  cellular life <rule> <generations> <pattern>")
   println("  cellular eca <rule 0-255> <width> <generations>")
+  println("  cellular random <rule> <width> <height> <generations>")
   println("  cellular patterns")
   println("")
   println("examples:")
   println("  cellular life B3/S23 10 glider")
   println("  cellular eca 30 40 20")
+  println("  cellular random B3/S23 20 10 5")
 }
 
 fn run_life(args : Array[String]) -> Unit {
@@ -72,6 +75,33 @@ fn run_eca(args : Array[String]) -> Unit {
   for _ in 0..<generations {
     cur = @cellular.eca_step(rule, cur, true)
     println(@cellular.render_eca(cur))
+  }
+}
+
+fn run_random(args : Array[String]) -> Unit {
+  if args.length() < 6 {
+    println("usage: cellular random <B/S rule> <width> <height> <generations>")
+    return
+  }
+  let rule = match @cellular.parse_life_rule(args[2]) {
+    Some(r) => r
+    None => {
+      println("invalid rule: \{args[2]}")
+      return
+    }
+  }
+  let width = parse_nonneg(args[3])
+  let height = parse_nonneg(args[4])
+  let generations = parse_nonneg(args[5])
+  if width < 1 || height < 1 {
+    println("width and height must be positive")
+    return
+  }
+  let mut cur = @cellular.Grid::random(width, height, 0.3)
+  println(@cellular.render_grid(cur))
+  for _ in 0..<generations {
+    cur = @cellular.life_step(rule, cur, true)
+    println(@cellular.render_grid(cur))
   }
 }
 

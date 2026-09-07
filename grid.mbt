@@ -32,3 +32,16 @@ pub fn Grid::live_count(self : Grid) -> Int {
   }
   n
 }
+
+/// Create a grid where each cell is alive with probability `density`
+/// (0.0 = all dead, 1.0 = all alive).
+pub fn Grid::random(width : Int, height : Int, density : Double) -> Grid {
+  let g = Grid::new(width, height)
+  let rand = @random.Rand::new()
+  for y = 0; y < height; y = y + 1 {
+    for x = 0; x < width; x = x + 1 {
+      g.set(x, y, rand.double() < density)
+    }
+  }
+  g
+}
