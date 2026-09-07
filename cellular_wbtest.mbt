@@ -156,6 +156,75 @@ test "random grid respects density bounds" {
   assert_eq!(all_alive.live_count(), 400)
 }
 
+test "Grid::from_string parses ASCII art" {
+  match Grid::from_string(".#.\n###\n.#.") {
+    Some(g) => {
+      assert_eq!(g.width, 3)
+      assert_eq!(g.height, 3)
+      assert_eq!(g.live_count(), 5)
+      assert_eq!(g.get(1, 0), true)
+      assert_eq!(g.get(0, 1), true)
+      assert_eq!(g.get(1, 1), true)
+      assert_eq!(g.get(2, 1), true)
+      assert_eq!(g.get(1, 2), true)
+      assert_eq!(g.get(0, 0), false)
+    }
+    None => assert_eq!(true, false)
+  }
+}
+
+test "Grid::from_string rejects ragged or empty input" {
+  let r1 = Grid::from_string(".#.\n##")
+  let r2 = Grid::from_string("")
+  let bad1 = match r1 {
+    Some(_) => false
+    None => true
+  }
+  let bad2 = match r2 {
+    Some(_) => false
+    None => true
+  }
+  assert_eq!(bad1, true)
+  assert_eq!(bad2, true)
+}
+
+test "Grid::copy is independent of the original" {
+  let g = glider()
+  let g2 = g.copy()
+  g2.set(0, 0, true)
+  assert_eq!(g.get(0, 0), false)
+  assert_eq!(g2.get(0, 0), true)
+  assert_eq!(g2.live_count(), g.live_count() + 1)
+}
+
+test "Grid::density computes the live fraction" {
+  let g = Grid::new(4, 4)
+  g.set(0, 0, true)
+  g.set(1, 0, true)
+  assert_eq!(g.density(), 0.125)
+}
+
+test "find_period detects still life and oscillator" {
+  match find_period(conway(), block(), 10, false) {
+    Some(r) => {
+      assert_eq!(r.period, 1)
+      assert_eq!(r.steps, 0)
+    }
+    None => assert_eq!(true, false)
+  }
+  match find_period(conway(), blinker(), 10, false) {
+    Some(r) => {
+      assert_eq!(r.period, 2)
+      assert_eq!(r.steps, 0)
+    }
+    None => assert_eq!(true, false)
+  }
+}
+
+test "rule_descriptions lists all 10 rules" {
+  assert_eq!(rule_descriptions().length(), 10)
+}
+
 fn rule_parses(s : String) -> Bool {
   match parse_life_rule(s) {
     Some(_) => true
